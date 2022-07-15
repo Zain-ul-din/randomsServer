@@ -43,7 +43,7 @@ export default function ActualApp ({mode}) {
     const [idToDel , setIdToDel] = useState ('')
 
     const [loading , setLoading]= useState (true)
-
+    
     useEffect (()=> {
          
         async function fetchData () {
@@ -62,7 +62,6 @@ export default function ActualApp ({mode}) {
         setLoading(false)
     } , [])
    
-    
     async function DeleteData (id) {
         try {
            await httpPower.delete (`${URL}/${id}`)
@@ -78,7 +77,11 @@ export default function ActualApp ({mode}) {
       </> :
         <>
            <Center>
-           {!apisData && <> <Text color={'red'} size = {'2xl'}>
+           {!apisData && <> 
+            <Center>
+             <Spinner size = {'xl'}/>
+            </Center>
+           <Text color={'red'} size = {'2xl'}>
             No targeted user so far 😥
            </Text></>}
            </Center>
