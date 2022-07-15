@@ -21,31 +21,45 @@ import {
     ModalBody,
     ModalCloseButton ,
     useDisclosure,
-    Text
+    Text ,
+    Spinner
 } from "@chakra-ui/react"
 
-
+import { io } from "socket.io-client"
 import httpPower from 'axios'
 
 const URL = process.env.REACT_APP_APIURL
 
-export default function ActualApp () {
+
+
+const server = io (process.env.REACT_APP_APIURL)
+
+export default function ActualApp ({mode}) {
+
+ 
 
     const [apisData , setApisData] = useState (null)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [idToDel , setIdToDel] = useState ('')
 
-    useEffect (()=> {
-        async  function fetchData () {
-              const res = await httpPower.get (URL)
-              setApisData (JSON.parse(res.data.data).database)
-        }
+    const [loading , setLoading]= useState (true)
 
+    useEffect (()=> {
+         
+        async function fetchData () {
+              const res = await httpPower.get (URL)
+              setApisData (res.data)
+        }
+        
         setInterval (()=>{
             fetchData ()
-        } , 60000)
-     
+        } , 30000)
+        
+        server.on ('onDataChange' , (listner) => { fetchData() })
+      
+
         fetchData ()
+        setLoading(false)
     } , [])
    
     
@@ -56,7 +70,12 @@ export default function ActualApp () {
         } catch (err) {}
     }
     
-    return (
+    return ( <>
+      {loading ? <> 
+         <Center>
+          <Spinner size = {'xl'}/>
+         </Center>
+      </> :
         <>
            <Center>
            {!apisData && <> <Text color={'red'} size = {'2xl'}>
@@ -71,7 +90,7 @@ export default function ActualApp () {
                         <h2>   
                          <AccordionButton>
                           <Box flex='1' textAlign='left'>
-                            {data.id}
+                            {idx}
                           </Box>
                           <AccordionIcon />
                          </AccordionButton>
@@ -80,12 +99,13 @@ export default function ActualApp () {
                             <Stack>
                                 <Center>
                              <Box>
+                                { mode === 'admin' && 
                                <Button ml = {10} size = {'xs'} colorScheme = {'red'}
                                  onClick={()=> {
                                     setIdToDel(data.id)
                                     onOpen()
                                 }}
-                               >Delete</Button>
+                               >Delete</Button>}
                              </Box>
                              </Center>
                             <Code colorScheme = {"gray"}>
@@ -123,6 +143,6 @@ export default function ActualApp () {
           </ModalFooter>
         </ModalContent>
       </Modal>
-        </>
+        </>}</>
     )
 }

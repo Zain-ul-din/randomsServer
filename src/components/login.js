@@ -21,13 +21,14 @@ from '@chakra-ui/react'
 import { ViewIcon , ViewOffIcon } from '@chakra-ui/icons'
 
 const PASSWORD = process.env.REACT_APP_USERPASSWORD 
+const _PASSWORD  = process.env.REACT_APP_CLIENT_PASSWORD
 
 export default function LoginComponent () {
     const hackerLogin = useContext (hackingServer)
     const  [showPassword , setShowPassword ] = useState (false)
     const [password , setPassword] = useState ('')
     
-
+    
     return (
         <>
         <Flex w = {'100%'} h = {'100%'} justifyContent = {'center'} alignItems = {'center'} 
@@ -37,7 +38,7 @@ export default function LoginComponent () {
             <form onSubmit={(e)=> {
                 e.preventDefault()
                 hackerLogin.setState ({...hackerLogin.state 
-                , user : password === PASSWORD ? 'user' : null})
+                , user : password === PASSWORD ? 'admin' : password === _PASSWORD ? 'user' : null})
             }}>
             <FormControl>
              <FormLabel htmlFor = 'password'>Enter Password</FormLabel>

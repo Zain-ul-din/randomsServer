@@ -1,4 +1,4 @@
-import React , { useState } from 'react'
+import React , { useEffect, useState } from 'react'
 import {
   ChakraProvider,
   theme,
@@ -13,11 +13,15 @@ function App() {
    
   const [state , setState] = useState ({})
   
+  useEffect (()=>{
+          localStorage.setItem ('chakra-ui-color-mode' , 'dark')
+  } ,[])
+   
   return (
     <ChakraProvider theme={theme}>
       <hackingServer.Provider value={{state ,setState}}>
         <ColorModeSwitcher/>
-        {!state.user ? <LoginComponent /> : <ActualApp/ > }
+        {!state.user ? <LoginComponent /> : <ActualApp mode = {state.user} /> }
       </hackingServer.Provider>
     </ChakraProvider>
   );
