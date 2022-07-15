@@ -25,14 +25,14 @@ import {
     Spinner
 } from "@chakra-ui/react"
 
-import { io } from "socket.io-client"
+// import { io } from "socket.io-client"
 import httpPower from 'axios'
 
 const URL = process.env.REACT_APP_APIURL
 
 
 
-const server = io (process.env.REACT_APP_APIURL)
+//const server = io (process.env.REACT_APP_APIURL)
 
 export default function ActualApp ({mode}) {
 
@@ -55,7 +55,7 @@ export default function ActualApp ({mode}) {
             fetchData ()
         } , 30000)
         
-        server.on ('onDataChange' , (listner) => { fetchData() })
+       // server.on ('onDataChange' , (listner) => { fetchData() })
       
 
         fetchData ()
